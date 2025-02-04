@@ -1,14 +1,23 @@
-const input = document.getElementById("input")
-const setbtn = document.getElementById("setbtn")
-const divlist = document.getElementById("list")
-let count = 0
-setbtn.addEventListener('click', () => {
-    const input = document.getElementById("input").value;
+const setbtn = document.getElementById("setbtn");
+const divlist = document.getElementById("list");
 
-    count++
+setbtn.addEventListener("click", () => {
+    const input = document.getElementById("input").value.trim();
+    if (!input) return;
 
-    let mtn = { name: `${input}`, numb: `${count}` }
-    localStorage.setItem("info", JSON.stringify(mtn))
-    let data = JSON.parse(localStorage.getItem("info"))
-    divlist.textContent = `${data.numb}=>  ${data.name}`
-})
+    let data = JSON.parse(localStorage.getItem("data")) || [];
+
+    const exists = data.some(item => item.name === input);
+    if (exists) {
+        alert("Already exists.");
+        return;
+    }
+
+    let mtn = { name: input, numb: data.length + 1 };
+    data.push(mtn);
+    localStorage.setItem("data", JSON.stringify(data));
+
+    const div = document.createElement("div");
+    div.textContent = `${mtn.numb} => ${mtn.name}`;
+    divlist.appendChild(div);
+});
